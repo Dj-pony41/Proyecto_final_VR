@@ -55,7 +55,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ActionPose"",
+                    ""name"": ""PoseRandom"",
                     ""type"": ""Button"",
                     ""id"": ""9df0674b-62e0-4364-9e1d-42e189a6fa27"",
                     ""expectedControlType"": ""Button"",
@@ -291,7 +291,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionPose"",
+                    ""action"": ""PoseRandom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -302,7 +302,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionPose"",
+                    ""action"": ""PoseRandom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -448,7 +448,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_ActionPose = m_Player.FindAction("ActionPose", throwIfNotFound: true);
+        m_Player_PoseRandom = m_Player.FindAction("PoseRandom", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Creep = m_Player.FindAction("Creep", throwIfNotFound: true);
@@ -519,7 +519,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_ActionPose;
+    private readonly InputAction m_Player_PoseRandom;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Creep;
@@ -533,7 +533,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputAction @ActionPose => m_Wrapper.m_Player_ActionPose;
+        public InputAction @PoseRandom => m_Wrapper.m_Player_PoseRandom;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Creep => m_Wrapper.m_Player_Creep;
@@ -558,9 +558,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @ActionPose.started += instance.OnActionPose;
-            @ActionPose.performed += instance.OnActionPose;
-            @ActionPose.canceled += instance.OnActionPose;
+            @PoseRandom.started += instance.OnPoseRandom;
+            @PoseRandom.performed += instance.OnPoseRandom;
+            @PoseRandom.canceled += instance.OnPoseRandom;
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
@@ -592,9 +592,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @ActionPose.started -= instance.OnActionPose;
-            @ActionPose.performed -= instance.OnActionPose;
-            @ActionPose.canceled -= instance.OnActionPose;
+            @PoseRandom.started -= instance.OnPoseRandom;
+            @PoseRandom.performed -= instance.OnPoseRandom;
+            @PoseRandom.canceled -= instance.OnPoseRandom;
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
@@ -635,7 +635,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnActionPose(InputAction.CallbackContext context);
+        void OnPoseRandom(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnCreep(InputAction.CallbackContext context);

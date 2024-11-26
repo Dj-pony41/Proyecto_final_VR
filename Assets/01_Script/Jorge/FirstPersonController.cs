@@ -27,7 +27,6 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Video de animación")]
     public float velociadaRotacion = 200.0f;
-    private Animator anim;
     public float x, y;
 
     [Header("Chatgpt de animación")]
@@ -37,6 +36,11 @@ public class FirstPersonController : MonoBehaviour
     [Header("Configuraciones")]
     public bool usarMouseParaCamara = true; // Interruptor para activar/desactivar el mouse
 
+    [Header("Animaciones y Poses")]
+    private Animator animatorPoses;
+    private int currentPose = 0; // Índice de la pose actual (0 = ninguna pose activa)
+    private int totalPoses = 5;  // Número total de poses disponibles
+
 
     void Start()
     {
@@ -45,7 +49,7 @@ public class FirstPersonController : MonoBehaviour
 
         cam = Camera.main;
 
-        anim = GetComponent<Animator>();
+        animatorPoses = GetComponent<Animator>();
         animator = GetComponent<Animator>(); // Asegúrate de inicializar este también.
     }
 
@@ -60,6 +64,11 @@ public class FirstPersonController : MonoBehaviour
 
         // Detectar si estamos en el suelo
         estaEnSuelo = Physics.CheckSphere(comprobadorSuelo.position, 0.1f, sueloLayer);
+
+        if (movimientoInput != Vector2.zero && currentPose != 0)
+        {
+            CancelarPose();
+        }
 
         // Actualizar el Animator según el estado de salto
         animator.SetBool("IsJumping", !estaEnSuelo);
@@ -95,6 +104,27 @@ public class FirstPersonController : MonoBehaviour
         // Actualiza la última dirección.
         ultimaDireccion = new Vector2(velX, velY);
     }
+
+    public void ActivarPoseAleatoria()
+    {
+        if (currentPose == 0) // Solo activa una nueva pose si no hay una activa
+        {
+            int poseIndex = Random.Range(1, totalPoses + 1); // Generar un índice aleatorio (1 a 5)
+            currentPose = poseIndex; // Establece la pose actual
+            animator.SetInteger("PoseIndex", poseIndex);
+        }
+    }
+
+
+    public void CancelarPose()
+    {
+        if (currentPose != 0) // Solo cancela si hay una pose activa
+        {
+            currentPose = 0; // Ninguna pose activa
+            animator.SetInteger("PoseIndex", 0);
+        }
+    }
+
 
 
     void FixedUpdate()
@@ -145,5 +175,10 @@ public class FirstPersonController : MonoBehaviour
         {
             estaSaltando = true;
         }
+    }
+
+    public void OnPoseRandom(InputAction.CallbackContext context)
+    {
+        if (context.performed) ActivarPoseAleatoria();
     }
 }

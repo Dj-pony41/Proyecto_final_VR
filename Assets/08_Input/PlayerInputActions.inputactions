@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ActionPose",
+                    "name": "PoseRandom",
                     "type": "Button",
                     "id": "9df0674b-62e0-4364-9e1d-42e189a6fa27",
                     "expectedControlType": "Button",
@@ -269,7 +269,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ActionPose",
+                    "action": "PoseRandom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -280,7 +280,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ActionPose",
+                    "action": "PoseRandom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
