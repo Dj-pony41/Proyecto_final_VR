@@ -34,6 +34,10 @@ public class FirstPersonController : MonoBehaviour
     private Vector2 ultimaDireccion;
     private Animator animator;
 
+    [Header("Configuraciones")]
+    public bool usarMouseParaCamara = true; // Interruptor para activar/desactivar el mouse
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -42,15 +46,23 @@ public class FirstPersonController : MonoBehaviour
         cam = Camera.main;
 
         anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>(); // Asegúrate de inicializar este también.
     }
+
 
     void Update()
     {
         // Rotación de la cámara
-        RotarCamara();
+        if (usarMouseParaCamara)
+        {
+            RotarCamara(); // Solo rota la cámara si el mouse está activo
+        }
 
         // Detectar si estamos en el suelo
         estaEnSuelo = Physics.CheckSphere(comprobadorSuelo.position, 0.1f, sueloLayer);
+
+        // Actualizar el Animator según el estado de salto
+        animator.SetBool("IsJumping", !estaEnSuelo);
 
         // Saltar si se detecta la entrada y estamos en el suelo
         if (estaSaltando && estaEnSuelo)
@@ -63,24 +75,27 @@ public class FirstPersonController : MonoBehaviour
         ActualizarAnimaciones();
     }
 
+
     void ActualizarAnimaciones()
     {
-        // Calcula la dirección del movimiento
-        Vector3 velocidadActual = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        float velX = Vector3.Dot(transform.right, velocidadActual.normalized); // Movimiento lateral
-        float velY = Vector3.Dot(transform.forward, velocidadActual.normalized); // Movimiento adelante/atrás
+        // Usa movimientoInput para calcular las direcciones.
+        float velX = Mathf.Lerp(animator.GetFloat("VelX"), movimientoInput.x, Time.deltaTime * 10f);
+        float velY = Mathf.Lerp(animator.GetFloat("VelY"), movimientoInput.y, Time.deltaTime * 10f);
 
-        // Detectar cambio brusco de dirección (giro 180°)
+
+        // Detectar cambio brusco de dirección (giro 180°).
         bool giro180 = Vector2.Dot(ultimaDireccion, new Vector2(velX, velY)) < -0.5f && velY != 0;
 
-        // Actualizar el Animator con los parámetros de movimiento
+        // Actualizar el Animator con los parámetros de movimiento.
+
         animator.SetFloat("VelX", velX);
         animator.SetFloat("VelY", velY);
         animator.SetBool("IsTurning", giro180);
 
-        // Actualiza la última dirección
+        // Actualiza la última dirección.
         ultimaDireccion = new Vector2(velX, velY);
     }
+
 
     void FixedUpdate()
     {
@@ -118,7 +133,10 @@ public class FirstPersonController : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        rotacionInput = context.ReadValue<Vector2>();
+        if (usarMouseParaCamara) // Solo toma los datos del mouse si está activo
+        {
+            rotacionInput = context.ReadValue<Vector2>();
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
