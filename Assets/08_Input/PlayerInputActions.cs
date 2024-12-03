@@ -116,6 +116,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""4f9b6c49-036b-4cc7-a8b9-6cd21ec33df7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -437,6 +446,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ActionButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a3c708d-6478-4b7b-8637-61d4b9e00330"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -455,6 +475,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Telekinesis = m_Player.FindAction("Telekinesis", throwIfNotFound: true);
         m_Player_BodyChange = m_Player.FindAction("BodyChange", throwIfNotFound: true);
         m_Player_ActionButton = m_Player.FindAction("ActionButton", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -526,6 +547,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Telekinesis;
     private readonly InputAction m_Player_BodyChange;
     private readonly InputAction m_Player_ActionButton;
+    private readonly InputAction m_Player_Interact;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -540,6 +562,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Telekinesis => m_Wrapper.m_Player_Telekinesis;
         public InputAction @BodyChange => m_Wrapper.m_Player_BodyChange;
         public InputAction @ActionButton => m_Wrapper.m_Player_ActionButton;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -579,6 +602,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ActionButton.started += instance.OnActionButton;
             @ActionButton.performed += instance.OnActionButton;
             @ActionButton.canceled += instance.OnActionButton;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -613,6 +639,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ActionButton.started -= instance.OnActionButton;
             @ActionButton.performed -= instance.OnActionButton;
             @ActionButton.canceled -= instance.OnActionButton;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -642,5 +671,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnTelekinesis(InputAction.CallbackContext context);
         void OnBodyChange(InputAction.CallbackContext context);
         void OnActionButton(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
