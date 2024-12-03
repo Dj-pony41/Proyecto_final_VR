@@ -22,6 +22,7 @@ public class FirstPersonController : MonoBehaviour
 
     private Rigidbody rb;
     private Camera cam;
+    public GameObject camaraVR;
 
     private float rotacionCamaraX = 0f;
 
@@ -112,8 +113,11 @@ public class FirstPersonController : MonoBehaviour
             int poseIndex = Random.Range(1, totalPoses + 1); // Generar un índice aleatorio (1 a 5)
             currentPose = poseIndex; // Establece la pose actual
             animator.SetInteger("PoseIndex", poseIndex);
+            Debug.Log($"Pose aleatoria activada: {poseIndex}");
         }
     }
+
+
 
 
     public void CancelarPose()
@@ -121,9 +125,10 @@ public class FirstPersonController : MonoBehaviour
         if (currentPose != 0) // Solo cancela si hay una pose activa
         {
             currentPose = 0; // Ninguna pose activa
-            animator.SetInteger("PoseIndex", 0);
+            animator.SetInteger("PoseIndex", 0); // Vuelve al estado base
         }
     }
+
 
 
 
@@ -152,7 +157,7 @@ public class FirstPersonController : MonoBehaviour
         rotacionCamaraX -= rotacionInput.y * sensibilidad;
         rotacionCamaraX = Mathf.Clamp(rotacionCamaraX, -90f, 90f);
 
-        cam.transform.localRotation = Quaternion.Euler(rotacionCamaraX, 0f, 0f);
+        camaraVR.transform.localRotation = Quaternion.Euler(rotacionCamaraX, 0f, 0f);
     }
 
     // Métodos conectados al Input System
