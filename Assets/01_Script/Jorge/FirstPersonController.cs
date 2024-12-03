@@ -26,6 +26,9 @@ public class FirstPersonController : MonoBehaviour
 
     private float rotacionCamaraX = 0f;
 
+    [Header("Velocidad de Rotación")]
+    public float smoothSpeed = 5f; // Velocidad de rotación para alinear el personaje con la cámara
+
     [Header("Video de animación")]
     public float velociadaRotacion = 200.0f;
     public float x, y;
@@ -42,7 +45,6 @@ public class FirstPersonController : MonoBehaviour
     private int currentPose = 0; // Índice de la pose actual (0 = ninguna pose activa)
     private int totalPoses = 5;  // Número total de poses disponibles
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -54,7 +56,6 @@ public class FirstPersonController : MonoBehaviour
         animator = GetComponent<Animator>(); // Asegúrate de inicializar este también.
     }
 
-
     void Update()
     {
         // Rotación de la cámara
@@ -62,6 +63,9 @@ public class FirstPersonController : MonoBehaviour
         {
             RotarCamara(); // Solo rota la cámara si el mouse está activo
         }
+
+        // Alinear el personaje con la cámara
+        AlignCharacterWithCamera();
 
         // Detectar si estamos en el suelo
         estaEnSuelo = Physics.CheckSphere(comprobadorSuelo.position, 0.1f, sueloLayer);
@@ -84,53 +88,6 @@ public class FirstPersonController : MonoBehaviour
         // Movimiento y animaciones
         ActualizarAnimaciones();
     }
-
-
-    void ActualizarAnimaciones()
-    {
-        // Usa movimientoInput para calcular las direcciones.
-        float velX = Mathf.Lerp(animator.GetFloat("VelX"), movimientoInput.x, Time.deltaTime * 10f);
-        float velY = Mathf.Lerp(animator.GetFloat("VelY"), movimientoInput.y, Time.deltaTime * 10f);
-
-
-        // Detectar cambio brusco de dirección (giro 180°).
-        bool giro180 = Vector2.Dot(ultimaDireccion, new Vector2(velX, velY)) < -0.5f && velY != 0;
-
-        // Actualizar el Animator con los parámetros de movimiento.
-
-        animator.SetFloat("VelX", velX);
-        animator.SetFloat("VelY", velY);
-        animator.SetBool("IsTurning", giro180);
-
-        // Actualiza la última dirección.
-        ultimaDireccion = new Vector2(velX, velY);
-    }
-
-    public void ActivarPoseAleatoria()
-    {
-        if (currentPose == 0) // Solo activa una nueva pose si no hay una activa
-        {
-            int poseIndex = Random.Range(1, totalPoses + 1); // Generar un índice aleatorio (1 a 5)
-            currentPose = poseIndex; // Establece la pose actual
-            animator.SetInteger("PoseIndex", poseIndex);
-            Debug.Log($"Pose aleatoria activada: {poseIndex}");
-        }
-    }
-
-
-
-
-    public void CancelarPose()
-    {
-        if (currentPose != 0) // Solo cancela si hay una pose activa
-        {
-            currentPose = 0; // Ninguna pose activa
-            animator.SetInteger("PoseIndex", 0); // Vuelve al estado base
-        }
-    }
-
-
-
 
     void FixedUpdate()
     {
@@ -158,6 +115,55 @@ public class FirstPersonController : MonoBehaviour
         rotacionCamaraX = Mathf.Clamp(rotacionCamaraX, -90f, 90f);
 
         camaraVR.transform.localRotation = Quaternion.Euler(rotacionCamaraX, 0f, 0f);
+    }
+
+    // Método para alinear el personaje con la dirección de la cámara
+    void AlignCharacterWithCamera()
+    {
+        Vector3 forwardCameraDirection = new Vector3(camaraVR.transform.forward.x, 0, camaraVR.transform.forward.z).normalized;
+        if (forwardCameraDirection.sqrMagnitude > 0.01f) // Asegurarse de que haya una dirección válida
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(forwardCameraDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * smoothSpeed);
+        }
+    }
+
+    void ActualizarAnimaciones()
+    {
+        // Usa movimientoInput para calcular las direcciones.
+        float velX = Mathf.Lerp(animator.GetFloat("VelX"), movimientoInput.x, Time.deltaTime * 10f);
+        float velY = Mathf.Lerp(animator.GetFloat("VelY"), movimientoInput.y, Time.deltaTime * 10f);
+
+        // Detectar cambio brusco de dirección (giro 180°).
+        bool giro180 = Vector2.Dot(ultimaDireccion, new Vector2(velX, velY)) < -0.5f && velY != 0;
+
+        // Actualizar el Animator con los parámetros de movimiento.
+        animator.SetFloat("VelX", velX);
+        animator.SetFloat("VelY", velY);
+        animator.SetBool("IsTurning", giro180);
+
+        // Actualiza la última dirección.
+        ultimaDireccion = new Vector2(velX, velY);
+    }
+
+    public void ActivarPoseAleatoria()
+    {
+        if (currentPose == 0) // Solo activa una nueva pose si no hay una activa
+        {
+            int poseIndex = Random.Range(1, totalPoses + 1); // Generar un índice aleatorio (1 a 5)
+            currentPose = poseIndex; // Establece la pose actual
+            animator.SetInteger("PoseIndex", poseIndex);
+            Debug.Log($"Pose aleatoria activada: {poseIndex}");
+        }
+    }
+
+    public void CancelarPose()
+    {
+        if (currentPose != 0) // Solo cancela si hay una pose activa
+        {
+            currentPose = 0; // Ninguna pose activa
+            animator.SetInteger("PoseIndex", 0); // Vuelve al estado base
+        }
     }
 
     // Métodos conectados al Input System
