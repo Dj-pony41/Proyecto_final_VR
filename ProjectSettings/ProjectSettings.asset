@@ -685,11 +685,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 9be81e82-5b7c-4c3d-868d-473a8c7bcb09
+  cloudProjectId: 6b9b8149-f5fd-42fa-b0ff-3c996cc3a4b7
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Proyecto_final_VR 2024-12-09_19-43-27
-  organizationId: the-lonely-wolf-76e758bc-721c-4503-93dc-b718868571a2
+  projectName: VR_Proyect
+  organizationId: dj-poni41
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   virtualTexturingSupportEnabled: 0

@@ -45,6 +45,11 @@ public class FirstPersonController : MonoBehaviour
     private int currentPose = 0; // Índice de la pose actual (0 = ninguna pose activa)
     private int totalPoses = 5;  // Número total de poses disponibles
 
+    [Header("Agacharse")]
+    public bool estaAgachado = false; // Estado del personaje (agachado o no)
+    public float multiplicadorVelocidadAgachado = 0.5f; // Reduce la velocidad mientras está agachado
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -91,10 +96,16 @@ public class FirstPersonController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movimiento del jugador usando Rigidbody
         Vector3 direccion = transform.forward * movimientoInput.y + transform.right * movimientoInput.x;
-        Vector3 velocidadDeseada = direccion.normalized * velocidadMovimiento;
+        float velocidadActual = velocidadMovimiento;
 
+        // Reducir la velocidad si está agachado
+        if (estaAgachado)
+        {
+            velocidadActual *= multiplicadorVelocidadAgachado;
+        }
+
+        Vector3 velocidadDeseada = direccion.normalized * velocidadActual;
         Vector3 nuevaVelocidad = new Vector3(velocidadDeseada.x, rb.velocity.y, velocidadDeseada.z);
         rb.velocity = nuevaVelocidad;
 
@@ -192,4 +203,14 @@ public class FirstPersonController : MonoBehaviour
     {
         if (context.performed) ActivarPoseAleatoria();
     }
+
+    public void OnCrouch(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            estaAgachado = !estaAgachado; // Alternar el estado de agachado
+            animator.SetBool("agachado", estaAgachado); // Actualizar el parámetro en el Animator
+        }
+    }
+
 }
