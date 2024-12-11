@@ -33,7 +33,7 @@ public class FirstPersonController : MonoBehaviour
     public float velociadaRotacion = 200.0f;
     public float x, y;
 
-    [Header("Chatgpt de animación")]
+    [Header("animación")]
     private Vector2 ultimaDireccion;
     private Animator animator;
 
@@ -48,6 +48,13 @@ public class FirstPersonController : MonoBehaviour
     [Header("Agacharse")]
     public bool estaAgachado = false; // Estado del personaje (agachado o no)
     public float multiplicadorVelocidadAgachado = 0.5f; // Reduce la velocidad mientras está agachado
+
+    [Header("Agacharse Colision")]
+    public CapsuleCollider colParado;
+    public CapsuleCollider colAgachado;
+    public GameObject cabeza;
+    public HeadColision headColision;
+    public bool estoyAgachado;
 
 
     void Start()
@@ -88,6 +95,12 @@ public class FirstPersonController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
             estaSaltando = false;
+        }
+
+        // Verificar si se puede levantar cuando no se presiona el botón y no hay colisiones
+        if (estaAgachado && headColision.contadorDeColision <= 0 && !Keyboard.current.ctrlKey.isPressed)
+        {
+            Levantar();
         }
 
         // Movimiento y animaciones
@@ -177,6 +190,17 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    private void Levantar()
+    {
+        estaAgachado = false;
+        animator.SetBool("agachado", false); // Actualizar el Animator
+
+        cabeza.SetActive(false);
+        colAgachado.enabled = false;
+        colParado.enabled = true;
+    }
+
+
     // Métodos conectados al Input System
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -208,9 +232,21 @@ public class FirstPersonController : MonoBehaviour
     {
         if (context.performed)
         {
-            estaAgachado = !estaAgachado; // Alternar el estado de agachado
-            animator.SetBool("agachado", estaAgachado); // Actualizar el parámetro en el Animator
+            // Cuando se presiona el botón, activar el estado de agachado
+            estaAgachado = true;
+            animator.SetBool("agachado", true); // Actualizar el Animator
+
+            colAgachado.enabled = true;
+            colParado.enabled = false;
+            cabeza.SetActive(true);
+        }
+        else if (context.canceled && headColision.contadorDeColision <= 0)
+        {
+            // Cuando se suelta el botón y no hay colisiones, levantarse
+            Levantar();
         }
     }
+
+
 
 }
