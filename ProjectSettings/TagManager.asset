@@ -9,6 +9,8 @@ TagManager:
   - Vault
   - Slide
   - Deep Jump
+  - Key
+  - Floor
   layers:
   - Default
   - TransparentFX

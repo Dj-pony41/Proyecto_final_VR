@@ -1188,6 +1188,13 @@ MonoBehaviour:
   x: 0
   y: 0
   usarMouseParaCamara: 1
+  estaAgachado: 0
+  multiplicadorVelocidadAgachado: 0.5
+  colParado: {fileID: 0}
+  colAgachado: {fileID: 0}
+  cabeza: {fileID: 0}
+  headColision: {fileID: 0}
+  estoyAgachado: 0
 --- !u!114 &3470345911635001240
 MonoBehaviour:
   m_ObjectHideFlags: 0
