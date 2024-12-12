@@ -95,13 +95,5 @@ public class AccionesController : MonoBehaviour
 		}
 	}
 
-	private void OnDestroy()
-	{
-		// Desvincular la acción para evitar errores
-		InputAction interactAction = playerInput.actions["Interact"];
-		if (interactAction != null)
-		{
-			interactAction.performed -= _ => Interactuar();
-		}
-	}
+
 }

@@ -32,10 +32,12 @@ public class FlashlightDetection : MonoBehaviour
         // Realiza un Raycast para asegurarte de que no hay obstáculos entre la linterna y el Player
         if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, spotlight.range * 2f, detectionLayer))
         {
+            CheckpointManager checkpointManager = FindObjectOfType<CheckpointManager>();
             if (hit.collider.CompareTag("Player"))
             {
+                checkpointManager.PlayerCaught();
                 Debug.Log("Player detectado dentro del cono de luz!");
-                TriggerGameOver();
+                
             }
         }
     }
