@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class MainPanel : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MainPanel : MonoBehaviour
     [Header("panels")]
     public GameObject mainPanel;
     public GameObject creditos;
+
 
 
     public void abrirPanel(GameObject panel)
@@ -48,4 +50,37 @@ public class MainPanel : MonoBehaviour
         }
 
     }
+
+
+
+    public GameObject menuPausa;  // Referencia al GameObject del Menu Principal
+    public GameObject menuControl;   // Referencia al GameObject del Menu Opciones
+
+    public void continuarJuego(string scena)
+    {
+        SceneManager.LoadScene(scena);
+    }
+
+    public void verControlMando()
+    {
+        // Desactiva el menú Pausa
+        menuPausa.SetActive(false);
+
+        // Activa el menú Control
+        menuControl.SetActive(true);
+        //panel1.SetActive(true);
+    }
+
+
+
+
+    public void volverMenuPausa(GameObject menuControl)
+    {
+        menuPausa.SetActive(false);
+        menuControl.SetActive(false);
+
+        menuControl.SetActive(true);
+    }
+
+
 }
