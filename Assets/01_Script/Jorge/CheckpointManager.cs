@@ -30,27 +30,35 @@ public class CheckpointManager : MonoBehaviour
 
     public void PlayerCaught()
     {
+        Debug.Log($"Jugador atrapado. enPuntoInicial: {enPuntoInicial}, Checkpoint Actual: {currentCheckpointIndex}");
+
         if (enPuntoInicial)
         {
-            // En el punto inicial, vidas ilimitadas
             Debug.Log("Volviendo al punto inicial.");
             currentPlayer.transform.position = puntoInicial.position;
             currentPlayer.transform.rotation = puntoInicial.rotation;
+
+            // Restaura los maniquíes del primer checkpoint solo si fue activado
+            if (currentCheckpointIndex == 0 && checkpoints.Count > 0 && checkpoints[0].fueActivado)
+            {
+                checkpoints[0].RestoreManiquies();
+                Debug.Log("Maniquíes del punto inicial restaurados.");
+            }
         }
         else
         {
-            // Si estás en un checkpoint, gestionar las vidas
+            Debug.Log("Intentando usar checkpoint...");
             Checkpoint currentCheckpoint = checkpoints[currentCheckpointIndex];
             GameObject nextManiqui = currentCheckpoint.GetNextManiqui();
 
             if (nextManiqui != null)
             {
-                // Cambiar al siguiente maniquí
+                Debug.Log($"Cambiando al siguiente maniquí: {nextManiqui.name}");
                 ChangePlayerControl(nextManiqui);
             }
             else if (currentCheckpointIndex > 0)
             {
-                // Retroceder al checkpoint anterior
+                Debug.Log("Sin maniquíes. Retrocediendo al checkpoint anterior.");
                 RestoreCheckpoint(currentCheckpointIndex);
                 currentCheckpointIndex--;
                 ActivateCheckpoint(currentCheckpointIndex);
@@ -59,21 +67,37 @@ public class CheckpointManager : MonoBehaviour
             {
                 Debug.Log("No quedan vidas. Volviendo al punto inicial.");
                 enPuntoInicial = true;
-                PlayerCaught(); // Teletransportar al punto inicial
+                PlayerCaught(); // Llama nuevamente para manejar el punto inicial
             }
         }
     }
 
+
+
+
+
+
+
     public void ActivateNewCheckpoint(Checkpoint newCheckpoint)
     {
         int newIndex = checkpoints.IndexOf(newCheckpoint);
-        if (newIndex >= 0 && newIndex != currentCheckpointIndex)
+        Debug.Log($"newIndex: {newIndex}");
+
+        // Forzar la activación incluso si es el primer checkpoint
+        if (newIndex >= 0)
         {
             currentCheckpointIndex = newIndex;
-            enPuntoInicial = false; // Ya no estás en el punto inicial
-            Debug.Log($"Nuevo checkpoint activado: {currentCheckpointIndex}");
+            enPuntoInicial = false; // Siempre cambiar a falso al activar un checkpoint
+            Debug.Log($"Nuevo checkpoint activado. Índice: {currentCheckpointIndex}, enPuntoInicial: {enPuntoInicial}");
+        }
+        else
+        {
+            Debug.LogWarning("No se pudo activar el nuevo checkpoint.");
         }
     }
+
+
+
 
     private void ActivateCheckpoint(int index)
     {
@@ -90,8 +114,20 @@ public class CheckpointManager : MonoBehaviour
 
     private void ChangePlayerControl(GameObject newPlayer)
     {
-        currentPlayer.GetComponent<PlayerControlManager>().DesactivarControl();
+        if (currentPlayer != null)
+        {
+            Debug.Log($"Desactivando control del jugador actual: {currentPlayer.name}");
+            currentPlayer.GetComponent<PlayerControlManager>().DesactivarControl();
+            Destroy(currentPlayer);
+        }
+
         currentPlayer = newPlayer;
-        currentPlayer.GetComponent<PlayerControlManager>().ActivarControl();
+
+        if (currentPlayer != null)
+        {
+            Debug.Log($"Activando control del nuevo jugador: {currentPlayer.name}");
+            currentPlayer.GetComponent<PlayerControlManager>().ActivarControl();
+        }
     }
+
 }

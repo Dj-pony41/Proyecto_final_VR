@@ -8,6 +8,8 @@ public class Checkpoint : MonoBehaviour
     public Transform spawnPoint; // Punto donde aparecerá el jugador al activar este checkpoint
     private List<GameObject> maniquiesOriginales; // Copia para restaurar los maniquíes al retroceder
 
+    public bool fueActivado = false; // Estado para saber si este checkpoint fue activado previamente
+
     void Start()
     {
         // Crear una copia de los maniquíes originales para restaurarlos más tarde
@@ -25,9 +27,12 @@ public class Checkpoint : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         CheckpointManager checkpointManager = FindObjectOfType<CheckpointManager>();
+        Debug.Log("JJugador entro al check point");
         if (checkpointManager != null && other.gameObject == checkpointManager.currentPlayer)
         {
             checkpointManager.ActivateNewCheckpoint(this);
+            fueActivado = true;
+            Debug.Log("JJugador Activo al check point");
         }
     }
 
@@ -46,6 +51,11 @@ public class Checkpoint : MonoBehaviour
 
     public void RestoreManiquies()
     {
+        // Vacía la lista actual de maniquíes
+        if (!fueActivado) return;
+
+        maniquies.Clear();
+
         // Restaurar los maniquíes originales
         foreach (GameObject maniqui in maniquiesOriginales)
         {
@@ -54,7 +64,11 @@ public class Checkpoint : MonoBehaviour
                 GameObject restored = Instantiate(maniqui, maniqui.transform.position, maniqui.transform.rotation, transform);
                 restored.SetActive(true);
                 maniquies.Add(restored);
+                fueActivado = false;
             }
         }
+
+        Debug.Log($"Maniquíes restaurados en el checkpoint: {name}. Total: {maniquies.Count}");
     }
+
 }
