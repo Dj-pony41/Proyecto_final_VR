@@ -3,19 +3,26 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Pole
+  - Reach
+  - Vault
+  - Slide
+  - Deep Jump
+  - SkyboxCamera
+  - Key
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - GroundLayer
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Obstacles
+  - Floor
+  - Ledge
+  - Wall
+  - Player
   - 
   - 
   - 
