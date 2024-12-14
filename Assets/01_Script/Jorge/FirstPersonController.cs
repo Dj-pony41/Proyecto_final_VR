@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class FirstPersonController : MonoBehaviour
 {
+    [Header("Menú de Pausa")]
+    public GameObject menuPausa; // Objeto que representa el menú de pausa
+    private bool enPausa = false; // Estado del juego (en pausa o no)
+
     [Header("Movimiento")]
     public float velocidadMovimiento = 5f;
     public float fuerzaSalto = 5f;
@@ -67,6 +71,23 @@ public class FirstPersonController : MonoBehaviour
         animatorPoses = GetComponent<Animator>();
         animator = GetComponent<Animator>(); // Asegúrate de inicializar este también.
     }
+
+    public void TogglePause()
+    {
+        enPausa = !enPausa; // Cambiar el estado de pausa
+
+        if (enPausa)
+        {
+            Time.timeScale = 0f; // Detener el tiempo
+            menuPausa.SetActive(true); // Mostrar el menú de pausa
+        }
+        else
+        {
+            Time.timeScale = 1f; // Reanudar el tiempo
+            menuPausa.SetActive(false); // Ocultar el menú de pausa
+        }
+    }
+
 
     void Update()
     {
@@ -247,6 +268,13 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            TogglePause();
+        }
+    }
 
 
 }

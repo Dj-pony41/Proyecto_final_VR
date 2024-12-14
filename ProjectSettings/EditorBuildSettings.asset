@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/00_Scenes/Rover/Rover.unity
+    guid: 0158fe83269eb754ba696d7761663929
+  - enabled: 1
+    path: Assets/00_Scenes/MapaFinal/New Scene.unity
+    guid: 3df5e606d90ce4341be037493bba157e
   m_configObjects: {}

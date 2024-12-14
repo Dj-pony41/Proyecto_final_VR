@@ -40,14 +40,7 @@ public class MainPanel : MonoBehaviour
     //salir del juego
     public void salir()
     {
-        if (Application.isEditor)
-        {
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
-        else
-        {
-            Application.Quit();
-        }
+        Application.Quit();
 
     }
 
